@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.spring.mapper.BoardMapper">
+	<insert id="insert" parameterType="BoardVO" >
+		insert into tbl_board
+		(title,content,writer)
+		values (#{title}, #{content}, #{writer})
+	</insert>
+	
+	<!-- 이걸 사용해보기
+		keyColumn : DB에서 생성된 키 값이 들어갈 컬럼 지정
+		keyProperty : 자동 생성된 키 값을 저장할 객체의 이름
+		useGenerateKeys : true설정으로 할 경우 DB에서 자동으로 생성된 키 사용
+		 -->
+	<insert id="insertSelectBno" parameterType="BoardVO"
+		keyColumn="bno" keyProperty="bno" useGeneratedKeys="true">
+		insert into tbl_board
+		(title,content,writer)
+		values (#{title}, #{content}, #{writer})
+	</insert>
+	
+	<select id="selectAll" resultType="BoardVO">
+		select * from tbl_board
+	</select>
+	
+	<update id="update" parameterType="BoardVO">
+		UPDATE tbl_board
+		SET title = #{title},
+		content = #{content}
+		WHERE bno = #{bno}
+	</update>
+	
+	<delete id="delete" parameterType="BoardVO">
+		DELETE FROM tbl_board WHERE bno = #{bno}
+	</delete>
+	
+	<!-- parameterType="BoardVO"가 없어도 가능하긴 함
+	(자동적으로 정해지기 때문,BoardVO가 아니라 Integer를 해도 Integer은 bno하나밖에 없어서 자동적으로 정해짐) 
+	하지만 직관적으로 보여주기 위해서 해주는게 좋음 -->
+	<select id="select" resultType="BoardVO" parameterType="BoardVO">
+		SELECT * FROM tbl_board WHERE bno=#{bno}
+	</select>
+	
+	<select id="num" resultType="Integer">
+		SELECT max(bno) FROM tbl_board
+	</select>
+</mapper>

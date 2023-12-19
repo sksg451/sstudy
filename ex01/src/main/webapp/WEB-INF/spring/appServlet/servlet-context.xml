@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<resources mapping="/resources/**" location="/resources/" />
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	
+	<!-- 파일 업로드 객체 등록 -->
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 한글 인코딩 처리(한글 깨짐 방지) -->
+		<beans:property name="defaultEncoding" value="utf-8"/>
+		<!-- 1024*1024 = 1MB 근데 *이 인식이 안되서 1048576을 해줘야함 
+			근데 한번의 request(요청)으로 전달 가능한 최대 크기가 10MB라서
+			더 큰 파일의 경우 잘라서 해야함 -->
+		<beans:property name="maxUploadSize" value="10485760"/>
+		<!-- 하나의 파일의 최대크기 
+			1024*1024*2 = 2MB (2097152) : 5개의 파일첨부 가능 -->
+		<beans:property name="maxUploadSizePerFile" value="2097152"/>
+		<!-- 파일 저장하는 (임시)폴더의 경로 설정 -->
+		<beans:property name="uploadTempDir" value="file:/C:/fileUpload/tmp"/>		
+		<!-- 설정한 크기 이상의 파일이 들어온 경우 임시파일 형태로 보관
+			이걸 설정안해두면 최대크기 이상의 파일 업로드시 에러발생 -->
+		<beans:property name="maxInMemorySize" value="10485760"/>
+	</beans:bean>
+	
+	
+	<!-- org.spring.controller를 한번 읽어줌
+		마지막에 두는게 오류찾기 편함 -->
+	<context:component-scan base-package="org.spring.controller" />
+	<context:component-scan base-package="org.spring.exception" />
+	<context:component-scan base-package="org.spring.service"/>
+	
+</beans:beans>
