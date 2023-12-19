@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<!-- 인터페이스 구현 / mapper: 자바 객체와 메소드를 매핑(연결)의 의미 -->
+<mapper namespace="org.spring.mapper.MemberMapper">
+	<sql id="memberCols">
+		id,
+		pwd,
+		name,
+		email,
+		joinDate
+	</sql>
+	<!-- 인터페이스의 MemberVO getAllMembers() 메서드 구현 
+		resultType : 각 행(튜플)에 대한 자료형 작성 -->
+	<select id="getAllMembers" resultType="org.spring.model.MemberVO">
+		SELECT
+			<include refid="memberCols"/>
+		FROM t_member
+	</select>
+	
+	
+	<!-- 인터페이스의 MemberVO getMember(MemberVO user) 메서드 구현 -->
+	<select id="getMember" parameterType="org.spring.model.MemberVO" resultType="org.spring.model.MemberVO">
+		SELECT
+			<include refid="memberCols"/>
+		FROM t_member
+		WHERE id=#{id} AND pwd=#{pwd}
+	</select>
+</mapper>
